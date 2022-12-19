@@ -32,8 +32,10 @@ func NewReplicator(
 	shards uint64,
 	compress bool,
 	snapshot snapshot.NatsSnapshot,
+	opts ...nats.Option,
 ) (*Replicator, error) {
-	nc, err := nats.Connect(natsServer, nats.Name(cfg.Config.NodeName()))
+	opts = append(opts, nats.Name(cfg.Config.NodeName()))
+	nc, err := nats.Connect(natsServer, opts...)
 
 	if err != nil {
 		return nil, err

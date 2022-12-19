@@ -62,12 +62,28 @@ func main() {
 		log.Panic().Err(err).Msg("Unable to initialize snapshot storage")
 	}
 
+	opts := []nats.Option{}
+	if cfg.Config.NATS.Seed != "" {
+		kp, err := nkeys.FromSeed([]byte(cfg.Config.NATS.Seed))
+		if err != nil {
+			log.Panic().Err(err).Msg("unable to decode nkey seed")
+		}
+		usrKey, _ := kp.PublicKey()
+		keyOpt := nats.Nkey(usrKey, func(nonce []byte) ([]byte, error) {
+			defer kp.Wipe()
+			return kp.Sign(nonce)
+		})
+
+		opts = append(opts, keyOpt)
+	}
+
 	rep, err := logstream.NewReplicator(
 		cfg.Config.NodeID,
 		strings.Join(cfg.Config.NATS.URLs, ", "),
 		cfg.Config.ReplicationLog.Shards,
 		cfg.Config.ReplicationLog.Compress,
 		snapshot.NewNatsDBSnapshot(streamDB, snpStore),
+		opts...,
 	)
 	if err != nil {
 		log.Panic().Err(err).Msg("Unable to initialize replicators")

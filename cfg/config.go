@@ -52,6 +52,7 @@ type NATSConfiguration struct {
 	URLs          []string `toml:"urls"`
 	SubjectPrefix string   `toml:"subject_prefix"`
 	StreamPrefix  string   `toml:"stream_prefix"`
+	Seed          string   `toml:"seed"`
 }
 
 type LoggingConfiguration struct {
@@ -111,6 +112,7 @@ var Config = &Configuration{
 		URLs:          []string{nats.DefaultURL},
 		SubjectPrefix: "marmot-change-log",
 		StreamPrefix:  "marmot-changes",
+		Seed:          "",
 	},
 
 	Logging: LoggingConfiguration{
