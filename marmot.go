@@ -1,9 +1,9 @@
 package main
 
 import (
+	"C"
 	"context"
 	"flag"
-	"github.com/maxpert/marmot/utils"
 	"io"
 	"os"
 	"strings"
@@ -13,6 +13,9 @@ import (
 	"github.com/maxpert/marmot/db"
 	"github.com/maxpert/marmot/logstream"
 	"github.com/maxpert/marmot/snapshot"
+	"github.com/maxpert/marmot/utils"
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nkeys"
 
 	"github.com/asaskevich/EventBus"
 	"github.com/rs/zerolog"
@@ -20,6 +23,11 @@ import (
 )
 
 func main() {
+	Run()
+}
+
+//export Run
+func Run() {
 	flag.Parse()
 
 	err := cfg.Load(*cfg.ConfigPath)
