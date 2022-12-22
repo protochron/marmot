@@ -23,14 +23,13 @@ import (
 )
 
 func main() {
-	Run()
+	flag.Parse()
+	Run(*cfg.ConfigPath)
 }
 
 //export Run
-func Run() {
-	flag.Parse()
-
-	err := cfg.Load(*cfg.ConfigPath)
+func Run(path string) {
+	err := cfg.Load(path)
 	if err != nil {
 		panic(err)
 	}
